@@ -93,6 +93,9 @@ func main() {
 			fmt.Println("Not able to query the hike uid in the DB -->",uid,err)
 		}
 
+		fmt.Println("Number of rows1 found ",rows1.Next())
+		fmt.Println("Number of rows2 found ",rows2.Next())
+
 		if(rows1.Next()) {
 			err := rows1.Scan(&user.ID,&user.HikeUID, &user.PlatformUID, &user.PlatformToken, &user.Msisdn,
 				&user.HikeToken,

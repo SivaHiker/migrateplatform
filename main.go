@@ -100,7 +100,9 @@ func main() {
 			err := rows1.Scan(&user.ID,&user.HikeUID, &user.PlatformUID, &user.PlatformToken, &user.Msisdn,
 				&user.HikeToken,
 				&user.CreateTime,&user.UpdateTs, &user.Status)
-			fmt.Println(err)
+			if(err!=nil) {
+				fmt.Println(err.Error())
+			}
 		}
 		//if(rows2.Next()) {
 		//	err := rows2.Scan(&userdetails.ID,&userdetails.HikeUID, &userdetails.Msisdn, &userdetails.Name,
@@ -127,6 +129,7 @@ func main() {
 		} else {
 			continue
 		}
+		fmt.Println("The Msisdn got ",msisdnReqd)
 		//msisdnReqd2 := userdetails.Msisdn
 		//if strings.HasPrefix(msisdnReqd,"9") {
 		//	msisdnReqd2=strings.Replace(msisdnReqd2,"9","1",1)

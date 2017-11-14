@@ -23,6 +23,7 @@ func main() {
 	}
 
 	dbConn := getDBConnection()
+	dbConn.SetMaxIdleConns(100)
 	dbConn.SetMaxOpenConns(10000)
 
 	defer dbConn.Close()

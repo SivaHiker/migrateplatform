@@ -73,7 +73,7 @@ func main() {
 			break
 		}
 		var user platformUser
-		var userdetails platformUserDetails
+		//var userdetails platformUserDetails
 		//fmt.Printf(" > Read %d characters\n", len(line))
 		//fmt.Println(line)
 		uservalues := strings.Split(line,"+")
@@ -87,14 +87,14 @@ func main() {
 		if(err!=nil){
 			fmt.Println("Not able to query the hike uid in the DB -->",uid,err)
 		}
-		fmt.Println("select * from platform_user_details where  hike_uid=\""+uid+"\"")
-		rows2,err := dbConn.Query("select * from platform_user_details where hike_uid=\""+uid+"\"")
-		if(err!=nil){
-			fmt.Println("Not able to query the hike uid in the DB -->",uid,err)
-		}
+		//fmt.Println("select * from platform_user_details where  hike_uid=\""+uid+"\"")
+		//rows2,err := dbConn.Query("select * from platform_user_details where hike_uid=\""+uid+"\"")
+		//if(err!=nil){
+		//	fmt.Println("Not able to query the hike uid in the DB -->",uid,err)
+		//}
 
 		fmt.Println("Number of rows1 found ",rows1.Next())
-		fmt.Println("Number of rows2 found ",rows2.Next())
+		//fmt.Println("Number of rows2 found ",rows2.Next())
 
 		if(rows1.Next()) {
 			err := rows1.Scan(&user.ID,&user.HikeUID, &user.PlatformUID, &user.PlatformToken, &user.Msisdn,
@@ -102,12 +102,12 @@ func main() {
 				&user.CreateTime,&user.UpdateTs, &user.Status)
 			fmt.Println(err)
 		}
-		if(rows2.Next()) {
-			err := rows2.Scan(&userdetails.ID,&userdetails.HikeUID, &userdetails.Msisdn, &userdetails.Name,
-				&userdetails.Gender,
-				&userdetails.Circle, &userdetails.CreateTime, &userdetails.UpdateTime)
-			fmt.Println(err)
-		}
+		//if(rows2.Next()) {
+		//	err := rows2.Scan(&userdetails.ID,&userdetails.HikeUID, &userdetails.Msisdn, &userdetails.Name,
+		//		&userdetails.Gender,
+		//		&userdetails.Circle, &userdetails.CreateTime, &userdetails.UpdateTime)
+		//	fmt.Println(err)
+		//}
 		//userValues ={userd.Token,userd.Msisdn,userd.UID,userd.AppVersion,userd.DeviceKey,userd.DevID,
 		//userd.RegTime,userd.DevToken,userd.DevTokenUpdateTs,userd.DevVersion,userd.DevType,userd.Os,
 		//userd.OsVersion,userd.UpgradeTime,userd.LastActivityTime,userd.AttributeBits,userd.Sound,userd.EndTime,
@@ -127,16 +127,16 @@ func main() {
 		} else {
 			continue
 		}
-		msisdnReqd2 := userdetails.Msisdn
-		if strings.HasPrefix(msisdnReqd,"9") {
-			msisdnReqd2=strings.Replace(msisdnReqd2,"9","1",1)
-		} else if (strings.HasPrefix(msisdnReqd2,"9")) {
-			msisdnReqd2=strings.Replace(msisdnReqd2,"8","2",1)
-		} else if (strings.HasPrefix(msisdnReqd2,"9")) {
-			msisdnReqd2=strings.Replace(msisdnReqd2,"7","3",1)
-		} else {
-			continue
-		}
+		//msisdnReqd2 := userdetails.Msisdn
+		//if strings.HasPrefix(msisdnReqd,"9") {
+		//	msisdnReqd2=strings.Replace(msisdnReqd2,"9","1",1)
+		//} else if (strings.HasPrefix(msisdnReqd2,"9")) {
+		//	msisdnReqd2=strings.Replace(msisdnReqd2,"8","2",1)
+		//} else if (strings.HasPrefix(msisdnReqd2,"9")) {
+		//	msisdnReqd2=strings.Replace(msisdnReqd2,"7","3",1)
+		//} else {
+		//	continue
+		//}
 		count++
 		outputfile1.WriteString(ToIntegerVal(count)+"::"+user.HikeUID+"::"+user.PlatformUID+"::"+user.
 			PlatformToken+"::+"+msisdnReqd+"::"+user.HikeToken+"::"+user.CreateTime.String()+"::"+user.UpdateTs.String()+
@@ -147,14 +147,14 @@ func main() {
 			user.CreateTime.String(),user.UpdateTs.String(), ToString(user.Status)},
 		}
 
-		outputfile2.WriteString(ToIntegerVal(count)+"::"+userdetails.HikeUID+"::"+"+"+msisdnReqd+"::"+ToString(userdetails.
-			Name)+"::"+ ToString(userdetails.Gender)+"::"+ToString(userdetails.Circle)+"::"+
-				"::"+userdetails.CreateTime.String()+"::"+userdetails.UpdateTime.String()+"\n")
-
-		records2 := [][]string{
-			{ToIntegerVal(count),userdetails.HikeUID,"+"+msisdnReqd2,ToString(userdetails.Name),
-			ToString(userdetails.Gender),ToString(userdetails.Circle), userdetails.CreateTime.String(),userdetails.UpdateTime.String()},
-			}
+		//outputfile2.WriteString(ToIntegerVal(count)+"::"+userdetails.HikeUID+"::"+"+"+msisdnReqd+"::"+ToString(userdetails.
+		//	Name)+"::"+ ToString(userdetails.Gender)+"::"+ToString(userdetails.Circle)+"::"+
+		//		"::"+userdetails.CreateTime.String()+"::"+userdetails.UpdateTime.String()+"\n")
+		//
+		//records2 := [][]string{
+		//	{ToIntegerVal(count),userdetails.HikeUID,"+"+msisdnReqd2,ToString(userdetails.Name),
+		//	ToString(userdetails.Gender),ToString(userdetails.Circle), userdetails.CreateTime.String(),userdetails.UpdateTime.String()},
+		//	}
 
 		for _, value := range records1 {
 			err := writer1.Write(value)
@@ -164,16 +164,16 @@ func main() {
 			}
 		}
 
-		for _, value := range records2 {
-			err := writer2.Write(value)
-			if(err!=nil){
-				fmt.Println(err.Error())
-				fmt.Println("Not able to write the records into csv file")
-			}
-		}
+		//for _, value := range records2 {
+		//	err := writer2.Write(value)
+		//	if(err!=nil){
+		//		fmt.Println(err.Error())
+		//		fmt.Println("Not able to write the records into csv file")
+		//	}
+		//}
 
 		rows1.Close()
-		rows2.Close()
+		//rows2.Close()
 	}
 
 	if err != io.EOF {

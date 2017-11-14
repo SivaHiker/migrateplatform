@@ -80,13 +80,14 @@ func main() {
 		uid := uservalues[0]
 
 
-		uid="WcKAZgSAFlT4ZMM5"
+		uid="WcKAaVIchw737usm"
 		fmt.Println("select * from platform_user where  hike_uid=\""+uid+"\"")
 		<-limiter
 		rows1,err := dbConn.Query("select * from platform_user where  hike_uid=\""+uid+"\"")
 		if(err!=nil){
 			fmt.Println("Not able to query the hike uid in the DB -->",uid,err)
 		}
+		fmt.Println("select * from platform_user_details where  hike_uid=\""+uid+"\"")
 		rows2,err := dbConn.Query("select * from platform_user_details where hike_uid=\""+uid+"\"")
 		if(err!=nil){
 			fmt.Println("Not able to query the hike uid in the DB -->",uid,err)
@@ -134,21 +135,21 @@ func main() {
 			continue
 		}
 		count++
-		outputfile1.WriteString(ToIntegerVal(count)+"::"+user.HikeUID+"::"+user.PlatformUID+"::"+user.PlatformToken+"::"+
-			msisdnReqd+"::"+user.HikeToken+"::"+user.CreateTime.String()+"::"+user.UpdateTs.String()+"::"+ToString(user.
-				Status)+"\n")
+		outputfile1.WriteString(ToIntegerVal(count)+"::"+user.HikeUID+"::"+user.PlatformUID+"::"+user.
+			PlatformToken+"::+"+msisdnReqd+"::"+user.HikeToken+"::"+user.CreateTime.String()+"::"+user.UpdateTs.String()+
+				"::"+ToString(user.Status)+"\n")
 
 		records1 := [][]string{
-			{ToIntegerVal(count),user.HikeUID,user.PlatformUID,user.PlatformToken,msisdnReqd,user.HikeToken,
+			{ToIntegerVal(count),user.HikeUID,user.PlatformUID,user.PlatformToken,"+"+msisdnReqd,user.HikeToken,
 			user.CreateTime.String(),user.UpdateTs.String(), ToString(user.Status)},
 		}
 
-		outputfile2.WriteString(ToIntegerVal(count)+"::"+userdetails.HikeUID+"::"+msisdnReqd2+"::"+ToString(userdetails.
+		outputfile2.WriteString(ToIntegerVal(count)+"::"+userdetails.HikeUID+"::"+"+"+msisdnReqd+"::"+ToString(userdetails.
 			Name)+"::"+ ToString(userdetails.Gender)+"::"+ToString(userdetails.Circle)+"::"+
 				"::"+userdetails.CreateTime.String()+"::"+userdetails.UpdateTime.String()+"\n")
 
 		records2 := [][]string{
-			{ToIntegerVal(count),userdetails.HikeUID,msisdnReqd2,ToString(userdetails.Name),
+			{ToIntegerVal(count),userdetails.HikeUID,"+"+msisdnReqd2,ToString(userdetails.Name),
 			ToString(userdetails.Gender),ToString(userdetails.Circle), userdetails.CreateTime.String(),userdetails.UpdateTime.String()},
 			}
 

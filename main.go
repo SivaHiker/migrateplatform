@@ -2,7 +2,7 @@ package main
 
 import (
 	"time"
-	"database/sql"
+	_ "github.com/go-sql-driver/mysql"
 	"fmt"
 	"strconv"
 	"os"
@@ -10,6 +10,7 @@ import (
 	"encoding/csv"
 	"strings"
 	"io"
+	"database/sql"
 )
 
 func main() {
@@ -177,7 +178,7 @@ func main() {
 
 func getDBConnection() *sql.DB{
 
-	db, err := sql.Open("mysql", "platform:p1atf0rmD1$t@tcp(10.15.8.4:3306)/users?parseTime=true")
+	db, err := sql.Open("mysql", "platform:p1atf0rmD1$t@tcp(10.15.8.4:3306)/usersdb?parseTime=true")
 	if(err!=nil){
 		fmt.Println(err)
 	}

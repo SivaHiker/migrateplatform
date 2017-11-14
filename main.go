@@ -64,7 +64,7 @@ func main() {
 	defer writer2.Flush()
 	defer csvfile2.Close()
 
-	limiter := time.Tick(time.Nanosecond * 1000000)
+	limiter := time.Tick(time.Nanosecond * 2000000)
 
 	var line string
 	for {

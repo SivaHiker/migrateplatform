@@ -84,6 +84,7 @@ func main() {
 		fmt.Println("select * from platform_user where  hike_uid=\""+uid+"\"")
 		<-limiter
 		rows1,err := dbConn.Query("select * from platform_user where  hike_uid=\""+uid+"\"")
+		defer rows1.Close()
 		if(err!=nil){
 			fmt.Println("Not able to query the hike uid in the DB -->",uid,err)
 		}
@@ -94,10 +95,8 @@ func main() {
 		//}
 
 		if rows1.Next() {
-			fmt.Println("Entered")
 			err := rows1.Scan(&user.ID,&user.HikeUID, &user.PlatformUID, &user.PlatformToken, &user.Msisdn,
 				&user.HikeToken,&user.CreateTime,&user.UpdateTs, &user.Status)
-			fmt.Println("Entered2")
 			if(err!=nil) {
 				fmt.Println(err.Error())
 			}
@@ -116,22 +115,23 @@ func main() {
 		//outputfile.WriteString(ToString(userd.Token)+"::+"+ToIntegerVal(userd.Msisdn)+"::"+ToString(userd.
 		//	Sound)+"::"+ToIntegerVal(userd.UpgradeTime)+"\n")
 
-		fmt.Println("Entered3")
-		fmt.Println(user.Msisdn)
-		fmt.Println(user.CreateTime.String())
+
+		userCreateTime := strings.Split(user.CreateTime.String(),"+")
+		userCrTime := userCreateTime[0]
+		fmt.Println(strings.TrimSpace(userCrTime))
+
 		msisdnReqd := user.Msisdn
-		if strings.HasPrefix(msisdnReqd,"9") {
-			msisdnReqd=strings.Replace(msisdnReqd,"9","1",1)
+		if strings.HasPrefix(msisdnReqd,"+9") {
+			msisdnReqd=strings.Replace(msisdnReqd,"+9","1",1)
 			fmt.Print("Entered 9 if loop",msisdnReqd)
-		} else if (strings.HasPrefix(msisdnReqd,"9")) {
-			msisdnReqd=strings.Replace(msisdnReqd,"8","2",1)
-		} else if (strings.HasPrefix(msisdnReqd,"9")) {
+		} else if strings.HasPrefix(msisdnReqd,"+8") {
+			msisdnReqd=strings.Replace(msisdnReqd,"+8","2",1)
+		} else if strings.HasPrefix(msisdnReqd,"+7") {
 			msisdnReqd=strings.Replace(msisdnReqd,"7","3",1)
 		} else {
-			fmt.Println("Entered in a continous loop")
 			continue
 		}
-		fmt.Println("The Msisdn got ",msisdnReqd)
+
 		//msisdnReqd2 := userdetails.Msisdn
 		//if strings.HasPrefix(msisdnReqd,"9") {
 		//	msisdnReqd2=strings.Replace(msisdnReqd2,"9","1",1)
@@ -177,7 +177,7 @@ func main() {
 		//	}
 		//}
 
-		rows1.Close()
+
 		//rows2.Close()
 	}
 

@@ -97,9 +97,10 @@ func main() {
 		//fmt.Println("Number of rows2 found ",rows2.Next())
 
 		if(rows1.Next()) {
+			fmt.Println("Entered")
 			err := rows1.Scan(&user.ID,&user.HikeUID, &user.PlatformUID, &user.PlatformToken, &user.Msisdn,
-				&user.HikeToken,
-				&user.CreateTime,&user.UpdateTs, &user.Status)
+				&user.HikeToken,&user.CreateTime,&user.UpdateTs, &user.Status)
+			fmt.Println("Entered2")
 			if(err!=nil) {
 				fmt.Println(err.Error())
 			}
@@ -118,7 +119,7 @@ func main() {
 		//outputfile.WriteString(ToString(userd.Token)+"::+"+ToIntegerVal(userd.Msisdn)+"::"+ToString(userd.
 		//	Sound)+"::"+ToIntegerVal(userd.UpgradeTime)+"\n")
 
-
+		fmt.Println("Entered3")
 		msisdnReqd := user.Msisdn
 		if strings.HasPrefix(msisdnReqd,"9") {
 			msisdnReqd=strings.Replace(msisdnReqd,"9","1",1)

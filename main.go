@@ -93,12 +93,14 @@ func main() {
 		}
 
 		if(rows1.Next()) {
-			err := rows1.Scan(&user.HikeUID, &user.PlatformUID, &user.PlatformToken, &user.Msisdn, &user.HikeToken,
+			err := rows1.Scan(&user.ID,&user.HikeUID, &user.PlatformUID, &user.PlatformToken, &user.Msisdn,
+				&user.HikeToken,
 				&user.CreateTime,&user.UpdateTs, &user.Status)
 			fmt.Println(err)
 		}
 		if(rows2.Next()) {
-			err := rows2.Scan(&userdetails.HikeUID, &userdetails.Msisdn, &userdetails.Name, &userdetails.Gender,
+			err := rows2.Scan(&userdetails.ID,&userdetails.HikeUID, &userdetails.Msisdn, &userdetails.Name,
+				&userdetails.Gender,
 				&userdetails.Circle, &userdetails.CreateTime, &userdetails.UpdateTime)
 			fmt.Println(err)
 		}

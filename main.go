@@ -117,14 +117,18 @@ func main() {
 		//	Sound)+"::"+ToIntegerVal(userd.UpgradeTime)+"\n")
 
 		fmt.Println("Entered3")
+		fmt.Println(user.Msisdn)
+		fmt.Println(user.CreateTime.String())
 		msisdnReqd := user.Msisdn
 		if strings.HasPrefix(msisdnReqd,"9") {
 			msisdnReqd=strings.Replace(msisdnReqd,"9","1",1)
+			fmt.Print("Entered 9 if loop",msisdnReqd)
 		} else if (strings.HasPrefix(msisdnReqd,"9")) {
 			msisdnReqd=strings.Replace(msisdnReqd,"8","2",1)
 		} else if (strings.HasPrefix(msisdnReqd,"9")) {
 			msisdnReqd=strings.Replace(msisdnReqd,"7","3",1)
 		} else {
+			fmt.Println("Entered in a continous loop")
 			continue
 		}
 		fmt.Println("The Msisdn got ",msisdnReqd)

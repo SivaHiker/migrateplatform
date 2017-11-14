@@ -118,7 +118,18 @@ func main() {
 
 		userCreateTime := strings.Split(user.CreateTime.String(),"+")
 		userCrTime := userCreateTime[0]
-		fmt.Println(strings.TrimSpace(userCrTime))
+
+
+		userUpdateTime := strings.Split(user.UpdateTs.String(),"+")
+		userUpTime := userUpdateTime[0]
+
+
+		//userDetailCreateTime := strings.Split(userdetail.CreateTime.String(),"+")
+		//userCrTime := userCreateTime[0]
+		//
+		//
+		//userDetailUpdateTime := strings.Split(user.UpdateTs.String(),"+")
+		//userUpTime := userUpdateTime[0]
 
 		msisdnReqd := user.Msisdn
 		if strings.HasPrefix(msisdnReqd,"+9") {
@@ -133,23 +144,23 @@ func main() {
 		}
 
 		//msisdnReqd2 := userdetails.Msisdn
-		//if strings.HasPrefix(msisdnReqd,"9") {
-		//	msisdnReqd2=strings.Replace(msisdnReqd2,"9","1",1)
-		//} else if (strings.HasPrefix(msisdnReqd2,"9")) {
-		//	msisdnReqd2=strings.Replace(msisdnReqd2,"8","2",1)
-		//} else if (strings.HasPrefix(msisdnReqd2,"9")) {
-		//	msisdnReqd2=strings.Replace(msisdnReqd2,"7","3",1)
+		//if strings.HasPrefix(msisdnReqd,"+9") {
+		//	msisdnReqd2=strings.Replace(msisdnReqd2,"+9","1",1)
+		//} else if strings.HasPrefix(msisdnReqd2,"+8") {
+		//	msisdnReqd2=strings.Replace(msisdnReqd2,"+8","2",1)
+		//} else if strings.HasPrefix(msisdnReqd2,"+7") {
+		//	msisdnReqd2=strings.Replace(msisdnReqd2,"+7","3",1)
 		//} else {
 		//	continue
 		//}
 		count++
 		outputfile1.WriteString(ToIntegerVal(count)+"::"+user.HikeUID+"::"+user.PlatformUID+"::"+user.
-			PlatformToken+"::+"+msisdnReqd+"::"+user.HikeToken+"::"+user.CreateTime.String()+"::"+user.UpdateTs.String()+
+			PlatformToken+"::+"+msisdnReqd+"::"+user.HikeToken+"::"+strings.TrimSpace(userCrTime)+"::"+strings.TrimSpace(userUpTime)+
 				"::"+ToString(user.Status)+"\n")
 
 		records1 := [][]string{
 			{ToIntegerVal(count),user.HikeUID,user.PlatformUID,user.PlatformToken,"+"+msisdnReqd,user.HikeToken,
-			user.CreateTime.String(),user.UpdateTs.String(), ToString(user.Status)},
+				strings.TrimSpace(userCrTime),strings.TrimSpace(userUpTime), ToString(user.Status)},
 		}
 
 		//outputfile2.WriteString(ToIntegerVal(count)+"::"+userdetails.HikeUID+"::"+"+"+msisdnReqd+"::"+ToString(userdetails.

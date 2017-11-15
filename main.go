@@ -102,6 +102,7 @@ func main() {
 		//userDtlUpTime := userDetailUpdateTime[0]
 
 		msisdnReqd := user.Msisdn
+		fmt.Println(msisdnReqd)
 		if strings.HasPrefix(msisdnReqd,"+9") {
 			msisdnReqd=strings.Replace(msisdnReqd,"+9","1",1)
 		} else if strings.HasPrefix(msisdnReqd,"+8") {

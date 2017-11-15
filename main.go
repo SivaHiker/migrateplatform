@@ -14,7 +14,8 @@ import (
 )
 
 func main() {
-	var count int64
+	var count1 int64
+	var count2 int64
 	file, err := os.Open("/home/siva/LatestAppOpenUsers_20170512_to_20171107.txt")
 	defer file.Close()
 
@@ -130,13 +131,13 @@ func main() {
 			continue
 		}
 
-		count++
-		outputfile1.WriteString(ToIntegerVal(count)+"::"+user.HikeUID+"::"+user.PlatformUID+"::"+user.
+		count1++
+		outputfile1.WriteString(ToIntegerVal(count1)+"::"+user.HikeUID+"::"+user.PlatformUID+"::"+user.
 			PlatformToken+"::+"+msisdnReqd+"::"+user.HikeToken+"::"+strings.TrimSpace(userCrTime)+"::"+strings.TrimSpace(userUpTime)+
 			"::"+ToString(user.Status)+"\n")
 
 		records1 := [][]string{
-			{ToIntegerVal(count),user.HikeUID,user.PlatformUID,user.PlatformToken,"+"+msisdnReqd,user.HikeToken,
+			{ToIntegerVal(count1),user.HikeUID,user.PlatformUID,user.PlatformToken,"+"+msisdnReqd,user.HikeToken,
 				strings.TrimSpace(userCrTime),strings.TrimSpace(userUpTime), ToString(user.Status)},
 		}
 
@@ -159,16 +160,16 @@ func main() {
 			continue
 		}
 
-
-		outputfile2.WriteString(ToIntegerVal(count)+"::"+userdetails.HikeUID+"::"+"+"+msisdnReqd+"::"+ToString(userdetails.
+		count2++
+		outputfile2.WriteString(ToIntegerVal(count2)+"::"+userdetails.HikeUID+"::"+"+"+msisdnReqd+"::"+ToString(
+			userdetails.
 			Name)+"::"+ ToString(userdetails.Gender)+"::"+ToString(userdetails.Circle)+"::"+
 				"::"+strings.TrimSpace(userDtlCrTime)+"::"+strings.TrimSpace(userDtlUpTime)+"\n")
 
 		records2 := [][]string{
-			{ToIntegerVal(count),userdetails.HikeUID,"+"+msisdnReqd2,ToString(userdetails.Name),
+			{ToIntegerVal(count2),userdetails.HikeUID,"+"+msisdnReqd2,ToString(userdetails.Name),
 			ToString(userdetails.Gender),ToString(userdetails.Circle), strings.TrimSpace(userDtlCrTime),strings.TrimSpace(userDtlUpTime)},
 			}
-
 
 		for _, value := range records2 {
 			err := writer2.Write(value)

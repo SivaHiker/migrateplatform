@@ -23,7 +23,6 @@ func main() {
 	}
 
 	dbConn := getDBConnection()
-	dbConn.SetMaxIdleConns(100)
 	dbConn.SetMaxOpenConns(10000)
 
 	defer dbConn.Close()
@@ -49,7 +48,22 @@ func main() {
 	defer writer1.Flush()
 	defer csvfile1.Close()
 
-	limiter := time.Tick(time.Nanosecond * 2000000)
+	outputfile2, err := os.Create("text2.txt")
+	if(err!=nil){
+		fmt.Println("Not able to create a file")
+	}
+	defer outputfile2.Close()
+
+	csvfile2, err := os.Create("result2.csv")
+	if(err!=nil){
+		fmt.Println("Not able to create a csv file")
+	}
+
+	writer2 := csv.NewWriter(csvfile2)
+	defer writer2.Flush()
+	defer csvfile2.Close()
+
+	limiter := time.Tick(time.Nanosecond * 1000000)
 
 	var line string
 	for {
@@ -58,16 +72,16 @@ func main() {
 			break
 		}
 		var user platformUser
-
-		uservalues := strings.Split(line,"+")
-		uid := uservalues[0]
-        fmt.Println(strings.TrimSpace(uid))
-
+		var userdetails platformUserDetails
+		uid :=line[0:16]
 		//uid="WcKAaVIchw737usm"
 		fmt.Println("select * from platform_user where  hike_uid=\""+strings.TrimSpace(uid)+"\"")
 		<-limiter
 		rows1,err := dbConn.Query("select * from platform_user where  hike_uid=\""+strings.TrimSpace(uid)+"\"")
-		defer rows1.Close()
+		if(err!=nil){
+			fmt.Println("Not able to query the hike uid in the DB -->",uid,err)
+		}
+		rows2,err := dbConn.Query("select * from platform_user_details where  hike_uid=\""+strings.TrimSpace(uid)+"\"")
 		if(err!=nil){
 			fmt.Println("Not able to query the hike uid in the DB -->",uid,err)
 		}
@@ -80,11 +94,14 @@ func main() {
 				fmt.Println(err.Error())
 			}
 		}
-		//if(rows2.Next()) {
-		//	err := rows2.Scan(&userdetails.ID,&userdetails.HikeUID, &userdetails.Msisdn, &userdetails.Name,
-		//		&userdetails.Gender,&userdetails.Circle, &userdetails.CreateTime, &userdetails.UpdateTime)
-		//	fmt.Println(err)
-		//}
+		rows1.Close()
+
+		if(rows2.Next()) {
+			err := rows2.Scan(&userdetails.ID,&userdetails.HikeUID, &userdetails.Msisdn, &userdetails.Name,
+				&userdetails.Gender,&userdetails.Circle, &userdetails.CreateTime, &userdetails.UpdateTime)
+			fmt.Println(err)
+		}
+		rows2.Close()
 
 		userCreateTime := strings.Split(user.CreateTime.String(),"+")
 		userCrTime := userCreateTime[0]
@@ -94,12 +111,12 @@ func main() {
 		userUpTime := userUpdateTime[0]
 
 
-		//userDetailCreateTime := strings.Split(userdetails.CreateTime.String(),"+")
-		//userDtlCrTime := userDetailCreateTime[0]
-		//
-		//
-		//userDetailUpdateTime := strings.Split(userdetails.UpdateTime.String(),"+")
-		//userDtlUpTime := userDetailUpdateTime[0]
+		userDetailCreateTime := strings.Split(userdetails.CreateTime.String(),"+")
+		userDtlCrTime := userDetailCreateTime[0]
+
+
+		userDetailUpdateTime := strings.Split(userdetails.UpdateTime.String(),"+")
+		userDtlUpTime := userDetailUpdateTime[0]
 
 		msisdnReqd := user.Msisdn
 		fmt.Println(msisdnReqd)
@@ -113,35 +130,15 @@ func main() {
 			continue
 		}
 
-		//msisdnReqd2 := userdetails.Msisdn
-		//if strings.HasPrefix(msisdnReqd,"+9") {
-		//	msisdnReqd2=strings.Replace(msisdnReqd2,"+9","1",1)
-		//} else if strings.HasPrefix(msisdnReqd2,"+8") {
-		//	msisdnReqd2=strings.Replace(msisdnReqd2,"+8","2",1)
-		//} else if strings.HasPrefix(msisdnReqd2,"+7") {
-		//	msisdnReqd2=strings.Replace(msisdnReqd2,"+7","3",1)
-		//} else {
-		//	continue
-		//}
-
 		count++
 		outputfile1.WriteString(ToIntegerVal(count)+"::"+user.HikeUID+"::"+user.PlatformUID+"::"+user.
 			PlatformToken+"::+"+msisdnReqd+"::"+user.HikeToken+"::"+strings.TrimSpace(userCrTime)+"::"+strings.TrimSpace(userUpTime)+
-				"::"+ToString(user.Status)+"\n")
+			"::"+ToString(user.Status)+"\n")
 
 		records1 := [][]string{
 			{ToIntegerVal(count),user.HikeUID,user.PlatformUID,user.PlatformToken,"+"+msisdnReqd,user.HikeToken,
 				strings.TrimSpace(userCrTime),strings.TrimSpace(userUpTime), ToString(user.Status)},
 		}
-
-		//outputfile2.WriteString(ToIntegerVal(count)+"::"+userdetails.HikeUID+"::"+"+"+msisdnReqd+"::"+ToString(userdetails.
-		//	Name)+"::"+ ToString(userdetails.Gender)+"::"+ToString(userdetails.Circle)+"::"+
-		//		"::"+strings.TrimSpace(userDtlCrTime)+"::"+strings.TrimSpace(userDtlUpTime)+"\n")
-		//
-		//records2 := [][]string{
-		//	{ToIntegerVal(count),userdetails.HikeUID,"+"+msisdnReqd2,ToString(userdetails.Name),
-		//	ToString(userdetails.Gender),ToString(userdetails.Circle), strings.TrimSpace(userDtlCrTime),strings.TrimSpace(userDtlUpTime)},
-		//	}
 
 		for _, value := range records1 {
 			err := writer1.Write(value)
@@ -151,13 +148,35 @@ func main() {
 			}
 		}
 
-		//for _, value := range records2 {
-		//	err := writer2.Write(value)
-		//	if(err!=nil){
-		//		fmt.Println(err.Error())
-		//		fmt.Println("Not able to write the records into csv file")
-		//	}
-		//}
+		msisdnReqd2 := userdetails.Msisdn
+		if strings.HasPrefix(msisdnReqd,"+9") {
+			msisdnReqd2=strings.Replace(msisdnReqd2,"+9","1",1)
+		} else if strings.HasPrefix(msisdnReqd2,"+8") {
+			msisdnReqd2=strings.Replace(msisdnReqd2,"+8","2",1)
+		} else if strings.HasPrefix(msisdnReqd2,"+7") {
+			msisdnReqd2=strings.Replace(msisdnReqd2,"+7","3",1)
+		} else {
+			continue
+		}
+
+
+		outputfile2.WriteString(ToIntegerVal(count)+"::"+userdetails.HikeUID+"::"+"+"+msisdnReqd+"::"+ToString(userdetails.
+			Name)+"::"+ ToString(userdetails.Gender)+"::"+ToString(userdetails.Circle)+"::"+
+				"::"+strings.TrimSpace(userDtlCrTime)+"::"+strings.TrimSpace(userDtlUpTime)+"\n")
+
+		records2 := [][]string{
+			{ToIntegerVal(count),userdetails.HikeUID,"+"+msisdnReqd2,ToString(userdetails.Name),
+			ToString(userdetails.Gender),ToString(userdetails.Circle), strings.TrimSpace(userDtlCrTime),strings.TrimSpace(userDtlUpTime)},
+			}
+
+
+		for _, value := range records2 {
+			err := writer2.Write(value)
+			if(err!=nil){
+				fmt.Println(err.Error())
+				fmt.Println("Not able to write the records into csv file")
+			}
+		}
 
 	}
 

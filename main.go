@@ -81,7 +81,7 @@ func main() {
 		uid := uservalues[0]
 
 
-		uid="WcKAaVIchw737usm"
+		//uid="WcKAaVIchw737usm"
 		fmt.Println("select * from platform_user where  hike_uid=\""+uid+"\"")
 		<-limiter
 		rows1,err := dbConn.Query("select * from platform_user where  hike_uid=\""+uid+"\"")

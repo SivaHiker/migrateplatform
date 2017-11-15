@@ -165,6 +165,7 @@ func main() {
 			{ToIntegerVal(count2),userdetails.HikeUID,"+"+msisdnReqd2,ToString(userdetails.Name),
 				ToString(userdetails.Gender),ToString(userdetails.Circle), strings.TrimSpace(userDtlCrTime),strings.TrimSpace(userDtlUpTime)},
 		}
+		fmt.Println("The length of records",len(records2))
 
 		for _, value := range records2 {
 			err := writer2.Write(value)

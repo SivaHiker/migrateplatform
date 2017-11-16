@@ -78,7 +78,7 @@ func main() {
 			fmt.Println(err)
 		}
 
-		if rows1.Next() {
+		for rows1.Next() {
 			err := rows1.Scan(&user.ID,&user.HikeUID, &user.PlatformUID, &user.PlatformToken, &user.Msisdn,
 				&user.HikeToken,&user.CreateTime,&user.UpdateTs, &user.Status)
 			if(err!=nil) {

@@ -71,7 +71,7 @@ func main() {
 			linecount++
 		}
 
-		fmt.Println("select * from platform_user where  hike_uid in ("+query+")")
+		//fmt.Println("select * from platform_user where  hike_uid in ("+query+")")
 		<-limiter
 		rows1,err := dbConn.Query("select * from platform_user where  hike_uid in ("+query+")")
 		if(err!=nil){

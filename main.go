@@ -10,6 +10,8 @@ import (
 	"encoding/csv"
 	"strings"
 	"database/sql"
+	"bytes"
+	"io"
 )
 
 func main() {
@@ -32,13 +34,13 @@ func main() {
 	// Start reading from the file with a reader.
 	reader := bufio.NewReader(file)
 
-	outputfile1, err := os.Create("text1.txt")
-	if(err!=nil){
-		fmt.Println("Not able to create a file")
-	}
-	defer outputfile1.Close()
+	//outputfile1, err := os.Create("text1.txt")
+	//if(err!=nil){
+	//	fmt.Println("Not able to create a file")
+	//}
+	//defer outputfile1.Close()
 
-	csvfile1, err := os.Create("result1.csv")
+	csvfile1, err := os.Create("resultplatform.csv")
 	if(err!=nil){
 		fmt.Println("Not able to create a csv file")
 	}
@@ -49,7 +51,6 @@ func main() {
 
 	limiter := time.Tick(time.Nanosecond * 333333333)
 
-	var line string
 	var linecount int
 	for {
 		linecount =0
@@ -57,18 +58,30 @@ func main() {
 		lines := make([]string, 2000)
 		query := ""
 		for linecount<1000 {
-			line, err = reader.ReadString('\n')
+			var buffer bytes.Buffer
+			var line []byte
+			line, _, err = reader.ReadLine()
+			buffer.Write(line)
+			println(buffer.String())
+			// If we're just at the EOF, break
 			if err != nil {
-				break
-			}
-			uid :=line[0:16]
-			lines = append(lines,uid)
-			if linecount == 0 {
-				query = query + "\"" + strings.TrimSpace(uid) + "\""
+				if query=="" {
+					fmt.Println("Final Number of records exported from the DB",recordsCount)
+					os.Exit(1)
+				} else {
+					break
+				}
 			} else {
-				query = query + ",\"" + strings.TrimSpace(uid) + "\""
+				uidString := string(line[:])
+				uid :=uidString[0:16]
+				lines = append(lines,uid)
+				if linecount == 0 {
+					query = query + "\"" + strings.TrimSpace(uid) + "\""
+				} else {
+					query = query + ",\"" + strings.TrimSpace(uid) + "\""
+				}
+				linecount++
 			}
-			linecount++
 		}
 
 		//fmt.Println("select * from platform_user where  hike_uid in ("+query+")")
@@ -105,9 +118,9 @@ func main() {
 
 			count1++
 			recordsCount++
-			outputfile1.WriteString(ToIntegerVal(count1)+"::"+user.HikeUID+"::"+user.PlatformUID+"::"+user.
-				PlatformToken+"::+"+msisdnReqd+"::"+user.HikeToken+"::"+strings.TrimSpace(userCrTime)+"::"+strings.TrimSpace(userUpTime)+
-				"::"+ToString(user.Status)+"\n")
+			//outputfile1.WriteString(ToIntegerVal(count1)+"::"+user.HikeUID+"::"+user.PlatformUID+"::"+user.
+			//	PlatformToken+"::+"+msisdnReqd+"::"+user.HikeToken+"::"+strings.TrimSpace(userCrTime)+"::"+strings.TrimSpace(userUpTime)+
+			//	"::"+ToString(user.Status)+"\n")
 
 			records1 := [][]string{
 				{ToIntegerVal(count1),user.HikeUID,user.PlatformUID,user.PlatformToken,"+"+msisdnReqd,user.HikeToken,
@@ -128,9 +141,9 @@ func main() {
 
 	fmt.Println("Final Number of records exported from the DB",recordsCount)
 
-	//if err != io.EOF {
-	//	fmt.Printf(" > Failed!: %v\n", err)
-	//}
+	if err != io.EOF {
+		fmt.Printf(" > Failed!: %v\n", err)
+	}
 
 }
 
